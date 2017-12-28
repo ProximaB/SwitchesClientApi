@@ -1,0 +1,3 @@
+<!-- TODO -->
+1. Create views for categorizing like: Room, or maybe filters, sort. Przeładowywać model po zmianie?
+2. Create api client for esp8266 with implmentation of Server Sent Events or webSockets. (Fiddler needed for testing)
