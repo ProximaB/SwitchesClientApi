@@ -21,15 +21,15 @@
             <!-- ko foreach: switches -->
             <tr>
                 <td>
-                    <span data-bind="visible: state" class="label label-success">ON</span>
-                    <span data-bind="visible: !state()" class="label label-important">OFF</span>
+                    <span data-bind="visible: isON" class="label label-success">ON</span>
+                    <span data-bind="visible: !isON()" class="label label-important">OFF</span>
                 </td>
-                <td><p><b data-bind="text: id"></b></p><p><b data-bind="text: name"></b></p><p data-bind="text: description"></p></td>
+                <td><p><b data-bind="text: id"></b>. <b data-bind="text: name"></b></p><p data-bind="text: description"></p></td>
                 <td>
-                    <span data-bind="visible: !state()">
+                    <span data-bind="visible: !isON()">
                         <button data-bind="click: $parent.switchOn" class="btn">Switch ON</button>
                     </span>
-                    <span data-bind="visible: state">
+                    <span data-bind="visible: isON">
                         <button data-bind="click: $parent.switchOFF" class="btn">Switch OFF</button> 
                     </span>
                     <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>

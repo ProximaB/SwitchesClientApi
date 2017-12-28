@@ -33,10 +33,10 @@ function SwitchesViewModel() {
         alert("Remove: " + swth.name());
     }
     self.markInProgress = function(swth) {
-        swth.state(false);
+        swth.state("OFF");
     }
     self.markDone = function(swth) {
-        task.state(true);
+        swth.state("ON");
     }
 
 self.ajax(self.switchesURI, 'GET').done(function(data) {
@@ -46,7 +46,11 @@ self.ajax(self.switchesURI, 'GET').done(function(data) {
             id: ko.observable(data[i].id),
             name: ko.observable(data[i].name),
             description: ko.observable(data[i].description),
-            state: ko.observable(data[i].state)
+            state: ko.observable(data[i].state),
+            isON: ko.computed( function() {
+                console.log(data[i].state);
+                return data[i].state=="ON" ? true : false;
+            })
         });
     }
 });
