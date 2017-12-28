@@ -1,8 +1,9 @@
 //cache: true, $.ajaxSetup({'cache':true});
 // application code here!
-function SwitchesViewModel() {
+function SwitchesViewModel(url) {
     var self = this;
-    self.switchesURI = 'http://localhost:57493/api/Switch';
+    //self.switchesURI = 'http://localhost:57493/api/Rooms/3/Switches';
+    self.switchesURI = url;
 
     self.switches = ko.observableArray();
 
@@ -32,15 +33,17 @@ function SwitchesViewModel() {
     self.remove = function(swth) {
         alert("Remove: " + swth.name());
     }
-    self.markInProgress = function(swth) {
-        swth.state("OFF");
+    self.switchOFF = function(swth) {
+        swth.state('OFF');
+        console.log('switchOFF');
     }
-    self.markDone = function(swth) {
+    self.switchON = function(swth) {
         swth.state("ON");
+        console.log('switchON');
     }
 
 self.ajax(self.switchesURI, 'GET').done(function(data) {
-    console.log(data.length);
+    console.log("data length: " + data.length);
     for (var i=0; i < data.length; i++) {
         self.switches.push({
             id: ko.observable(data[i].id),
@@ -48,15 +51,16 @@ self.ajax(self.switchesURI, 'GET').done(function(data) {
             description: ko.observable(data[i].description),
             state: ko.observable(data[i].state),
             isON: ko.computed( function() {
-                console.log(data[i].state);
-                return data[i].state=="ON" ? true : false;
+                console.log("computed state: " + data[i].state);
+                return data[i].state=="ON" ? true : false;   
             })
         });
     }
 });
 
+
 }
-ko.applyBindings(new SwitchesViewModel(), $('#main')[0]);
+ko.applyBindings(new SwitchesViewModel('http://localhost:57493/api/Rooms/2/Switches'), $('#main')[0]);
 
 //var vm = new TasksViewModel();
 // $(function () {
