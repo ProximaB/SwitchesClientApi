@@ -2,7 +2,7 @@
 // application code here!
 function SwitchesViewModel() {
     var self = this;
-    self.switchesURI = '';
+    self.switchesURI = 'http://localhost:57493/api/Switch';
 
     self.switches = ko.observableArray();
 
@@ -14,6 +14,7 @@ function SwitchesViewModel() {
             accepts: "application/json",
             cache: false,
             dataType: 'json',
+            'cache':true,
             data: JSON.stringify(data),         
             error: function(jqXHR) {
                 console.log("ajax error " + jqXHR.status);
@@ -37,18 +38,20 @@ function SwitchesViewModel() {
     self.markDone = function(swth) {
         task.state(true);
     }
-}
 
 self.ajax(self.switchesURI, 'GET').done(function(data) {
-    for (var i=0; i < data.switches.length; i++) {
+    console.log(data.length);
+    for (var i=0; i < data.length; i++) {
         self.switches.push({
-            name: ko.observable(data.switches.);
-            description: ko.observable(data.switches.);
-            state: ko.observable(data.switches.);
+            id: ko.observable(data[i].id),
+            name: ko.observable(data[i].name),
+            description: ko.observable(data[i].description),
+            state: ko.observable(data[i].state)
         });
     }
 });
 
+}
 ko.applyBindings(new SwitchesViewModel(), $('#main')[0]);
 
 //var vm = new TasksViewModel();

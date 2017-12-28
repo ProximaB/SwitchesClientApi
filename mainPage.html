@@ -24,7 +24,7 @@
                     <span data-bind="visible: state" class="label label-success">ON</span>
                     <span data-bind="visible: !state()" class="label label-important">OFF</span>
                 </td>
-                <td><p><b data-bind="text: name"></b></p><p data-bind="text: description"></p></td>
+                <td><p><b data-bind="text: id"></b></p><p><b data-bind="text: name"></b></p><p data-bind="text: description"></p></td>
                 <td>
                     <span data-bind="visible: !state()">
                         <button data-bind="click: $parent.switchOn" class="btn">Switch ON</button>
