@@ -48,10 +48,10 @@
                     <p data-bind="text: roomName"></p>
                 </td>
                 <td>
-                    <span data-bind="visible: isON">
+                    <span data-bind="visible: !isON()">
                         <button data-bind="click: $parent.switchON" class="btn">Switch ON</button>
                     </span>
-                    <span data-bind="visible: !isON()">
+                    <span data-bind="visible: isON">
                         <button data-bind="click: $parent.switchOFF" class="btn">Switch OFF</button>
                     </span>
                     <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
@@ -60,7 +60,9 @@
             </tr>
             <!-- /ko -->
         </table>
+        <div class="control-group">
         <button data-bind="click: beginAdd" class="btn">Add Switch</button>
+        </div>
     </div>
 
     <div id="add" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
@@ -90,7 +92,7 @@
                 <div class="control-group">
                     <label class="control-label" for="inputRoomId">Room</label>
                     <div class="controls">
-                        <select id="inputRoomId" name="inputRoomId" data-bind="options:switches, optionsValue:'id', optionsText:'name', value:roomId">
+                        <select id="inputRoomId" name="inputRoomId" data-bind="options:rooms, optionsValue:'id', optionsText:'name', value:roomId">
                         </select>
                     </div>
                 </div>
