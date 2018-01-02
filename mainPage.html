@@ -25,6 +25,9 @@
                     <b>Switch</b>
                 </td>
                 <td>
+                    <b>Room</b>
+                </td>
+                <td>
                     <b>Options</b>
                 </td>
             </tr>
@@ -42,10 +45,13 @@
                     <p data-bind="text: description"></p>
                 </td>
                 <td>
-                    <span data-bind="visible: !isON()">
+                    <p data-bind="text: roomName"></p>
+                </td>
+                <td>
+                    <span data-bind="visible: isON">
                         <button data-bind="click: $parent.switchON" class="btn">Switch ON</button>
                     </span>
-                    <span data-bind="visible: isON">
+                    <span data-bind="visible: !isON()">
                         <button data-bind="click: $parent.switchOFF" class="btn">Switch OFF</button>
                     </span>
                     <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
@@ -76,10 +82,16 @@
                         <input data-bind="value: description" type="text" id="inputDescription" placeholder="Description" style="width: 300px;">
                     </div>
                 </div>
-                <div class="control-group">
+                <!-- <div class="control-group">
                     <label class="control-label" for="inputRoomId">Room Id</label>
                     <div class="controls">
                         <input data-bind="value: roomId" type="text" id="inputRoomId" placeholder="Room Id" style="width: 300px;">
+                    </div>-->
+                <div class="control-group">
+                    <label class="control-label" for="inputRoomId">Room</label>
+                    <div class="controls">
+                        <select id="inputRoomId" name="inputRoomId" data-bind="options:switches, optionsValue:'id', optionsText:'name', value:roomId">
+                        </select>
                     </div>
                 </div>
                 <div class="control-group">
@@ -96,7 +108,6 @@
                 </div>
             </form>
         </div>
-
         <div class="modal-footer">
             <button data-bind="click: addSwitch" class="btn btn-primary">Add Switch</button>
             <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
