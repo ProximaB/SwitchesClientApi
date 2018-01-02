@@ -1,5 +1,5 @@
 //cache: true, $.ajaxSetup({'cache':true});
-// application code here!
+// 
 
 function Switch(data) {
     var self = this;
@@ -90,23 +90,7 @@ function SwitchesViewModel() {
   self.add = function (swth) {
     self.ajax(self.switchesURI, "POST", swth).done(function (data) {
       console.log("data add" + data);
-      self.switches.push({
-        id: ko.observable(data.id),
-        name: ko.observable(data.name),
-        description: ko.observable(data.description),
-        state: ko.observable(data.state),
-        roomId: ko.observable(data.roomId),
-        roomName: ko.observable("noName"),
-        isON: ko.computed({
-          read: function () {
-            return this.state == "ON" ? true : false;
-          },
-          write: function (value) {
-            this.state = value ? "ON" : "OFF";
-          },
-          owner: this
-        })
-      });
+      self.switches = ko.push( Switch(data) )
     }).done(
       function () {
         for (var j = 0; j < self.rooms().length; j++) {
@@ -129,7 +113,7 @@ function SwitchesViewModel() {
     self.joinWithRoom();
   });
 
-  self.joinWithRoom = function () {
+  self.joinWithRoom = function () {  // XD
     console.log("TESTEST");
     self.ajax(self.roomsURI, "GET").done(function (data) {
       console.log("[GET Rooms] data len: " + data.length);
@@ -154,7 +138,7 @@ function SwitchesViewModel() {
             console.log("PUSHED");
           }
         }
-        console.log("Switch[" + "all" + "] = " + self.switches());
+        console.log("Switches[all] = " + self.switches());
       });
   };
 }
@@ -166,6 +150,8 @@ function AddSwitchViewModel() {
   self.description = ko.observable();
   self.roomId = ko.observable();
   self.state = ko.observable();
+
+  self.roomsURI = 'http://localhost:57493/api/Rooms/';
 
   self.ajax = function (uri, method, data) {
     var request = {
@@ -184,7 +170,7 @@ function AddSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.ajax("http://localhost:57493/api/Rooms/", "GET").done(function (data) {
+  self.ajax(seld.roomsURI, "GET").done(function (data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
@@ -213,8 +199,3 @@ var switchesViewModel = new SwitchesViewModel();
 var addSwitchViewModel = new AddSwitchViewModel();
 ko.applyBindings(switchesViewModel, $("#main")[0]);
 ko.applyBindings(addSwitchViewModel, $("#add")[0]);
-
-//var vm = new TasksViewModel();
-// $(function () {
-//     ko.applyBindings(vm);
-// })
