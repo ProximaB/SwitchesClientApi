@@ -170,7 +170,7 @@ function AddSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.ajax(seld.roomsURI, "GET").done(function (data) {
+  self.ajax(self.roomsURI, "GET").done(function (data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
