@@ -1,9 +1,8 @@
 //cache: true, $.ajaxSetup({'cache':true});
 // application code here!
-function SwitchesViewModel(url) {
+function SwitchesViewModel() {
   var self = this;
-  //self.switchesURI = 'http://localhost:57493/api/Rooms/3/Switches';
-  self.switchesURI = url;
+  self.switchesURI = 'http://localhost:57493/api/Switches/';
 
   self.switches = ko.observableArray();
 
@@ -25,7 +24,8 @@ function SwitchesViewModel(url) {
   };
 
   self.beginAdd = function() {
-    alert("Add");
+    //alert("Add");
+    $("#add").modal();
   };
   self.beginEdit = function(swth) {
     alert("Edit: " + swth.name());
@@ -79,27 +79,25 @@ function AddSwitchViewModel() {
   var self = this;
   self.name = ko.observable();
   self.description = ko.observable();
-
-  self.state = "OFF";
-
+  self.roomId = ko.observable();
+  self.state = ko.observable();
   self.addSwitch = function() {
     $("#add").modal("hide");
     switchesViewModel.add({
-      name: self.title(),
+      name: self.name(),
       description: self.description(),
-      state: self.state()
+      state: self.state(),
+      roomId: self.roomId()
     });
-    self.title("");
+    self.name("");
     self.description("");
   };
 }
 
-var switchesViewModel = new SwitchesViewModel(
-  "http://localhost:57493/api/Switches/"
-);
+var switchesViewModel = new SwitchesViewModel();
 var addSwitchViewModel = new AddSwitchViewModel();
 ko.applyBindings(switchesViewModel, $("#main")[0]);
-ko.applyBindings(AddSwitchViewModel.$("#add")[0]);
+ko.applyBindings(addSwitchViewModel, $("#add")[0]);
 //var vm = new TasksViewModel();
 // $(function () {
 //     ko.applyBindings(vm);
