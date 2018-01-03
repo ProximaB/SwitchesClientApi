@@ -39,7 +39,6 @@ id: ko.observable(data[i].id),
 function SwitchesViewModel() {
   var self = this;
 
-  self.switchesURI = 'http://localhost:57493/api/Switches/';
   self.roomsURI = 'http://localhost:57493/api/Rooms/';
   self.switchesURI = 'http://localhost:57493/api/Switches/';
   self.switches = ko.observableArray();
@@ -71,20 +70,25 @@ function SwitchesViewModel() {
   };
 
   self.remove = function (swth) {
-    self.ajax(self.switchRIDeleteId + swth.id(), 'DELETE').done(function () {
+    self.ajax(self.switchesURI + swth.id(), 'DELETE').done(function () {
       self.tasks.remove(swth);
       console.log("Remove complete");
     });
-
-
   };
+
   self.switchOFF = function (swth) {
-    swth.isON(false);
-    console.log("switchOFF");
+    self.ajax(self.switchesURI + swth.id() + '/OFF', "PUT").done(function () {
+      swth.isON(false);
+      console.log("switchOFF");
+    })
   };
+
   self.switchON = function (swth) {
-    swth.isON(true);
-    console.log("switchON");
+    self.ajax(self.switchesURI + swth.id() + '/ON', "PUT").done(function () {  
+      swth.isON(true);
+      console.log("switchON");
+    })
+
   };
 
   self.add = function (swth) {
