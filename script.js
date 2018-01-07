@@ -40,8 +40,8 @@ id: ko.observable(data[i].id),
 function SwitchesViewModel() {
   var self = this;
 
-  self.roomsURI = 'http://localhost:57493/api/Rooms/';
-  self.switchesURI = 'http://localhost:57493/api/Switches/';
+  self.roomsURI = 'http://192.168.0.106:57493/api/Rooms/';
+  self.switchesURI = 'http://192.168.0.106:57493/api/Switches/';
   self.switches = ko.observableArray();
   self.rooms = ko.observableArray();
 
@@ -194,7 +194,7 @@ function AddSwitchViewModel() {
   self.roomId = ko.observable();
   self.state = ko.observable();
 
-  self.roomsURI = 'http://localhost:57493/api/Rooms/';
+  self.roomsURI = 'http://192.168.0.106:57493:57493/api/Rooms/';
 
   self.ajax = function (uri, method, data) {
     var request = {
@@ -248,7 +248,7 @@ function EditSwitchViewModel() {
   self.roomId = ko.observable();
   self.state = ko.observable();
   
-  self.roomsURI = 'http://localhost:57493/api/Rooms/';
+  self.roomsURI = 'http://192.168.0.106:57493/api/Rooms/';
 
   self.ajax = function (uri, method, data) {
     var request = {
