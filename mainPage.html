@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     <title>Switch API Client</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="cdn/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <script src="cdn/jquery-1.9.0.js"></script>
     <script src="cdn/bootstrap.min.js"></script>
     <script src="cdn/knockout-2.2.1.js"></script>
@@ -16,6 +17,7 @@
 </head>
 
 <body>
+    <!-- Switches View -->
     <div class="navbar">
         <div class="navbar-inner">
             <a class="brand" href="#">Switch API Client</a>
@@ -54,22 +56,23 @@
                 </td>
                 <td>
                     <span data-bind="visible: !isON()">
-                        <button data-bind="click: $parent.switchON" class="btn">Switch ON</button>
+                        <button data-bind="click: $parent.switchON" class="btn optionBtn">Switch ON &nbsp</button>
                     </span>
                     <span data-bind="visible: isON">
-                        <button data-bind="click: $parent.switchOFF" class="btn">Switch OFF</button>
+                        <button data-bind="click: $parent.switchOFF" class="btn optionBtn">Switch OFF</button>
                     </span>
-                    <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
-                    <button data-bind="click: $parent.remove" class="btn">Delete</button>
+                    <button data-bind="click: $parent.beginEdit" class="btn optionBtn">Edit</button>
+                    <button data-bind="click: $parent.remove" class="btn optionBtn">Delete</button>
                 </td>
             </tr>
             <!-- /ko -->
         </table>
         <div class="control-group">
-            <button data-bind="click: beginAdd" class="btn">Add Switch</button>
+            <button data-bind="click: beginAdd" class="optionBtn">Add Switch</button>
         </div>
     </div>
 
+    <!-- AddSwitch View -->
     <div id="add" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -117,6 +120,7 @@
         </div>
     </div>
 
+    <!-- EditSwitch View -->
     <div id="edit" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -164,13 +168,13 @@
         </div>
     </div>
 
-
+    <!--  Login View -->
     <div id="login" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="addDialogLabel">Login to Switches</h3>
         </div>
-        <div class="modal-body">
+        <div class="modal-body login">
             <form>
                 <div class="form-group">
                     <label>Username:</label>
@@ -185,9 +189,9 @@
                 </div> -->
             </form>
         </div>
-        <div class="modal-footer">
-            <button data-bind="click: login" class="btn btn-primary">Login</button>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <div class="modal-footer options">
+            <button data-bind="click: login" class="btn btn-primary loginBtn">Login</button>
+            <button class="btn loginBtn" data-dismiss="modal" aria-hidden="true">Cancel</button>
         </div>
     </div>
 
