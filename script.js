@@ -1,6 +1,6 @@
 $(document).ready(function(){
   //ws = new WebSocket("ws://192.168.137.1:57493/notifications");
-  ws = new WebSocket("ws://192.168.1.9:12345/notifications");
+  ws = new WebSocket("ws://192.168.1.101:12345/notifications");
   console.log("Web Socket connected!")
   ws.onmessage = function(evt) { 
     self = this;
@@ -20,7 +20,7 @@ $(document).ready(function(){
 })
 
 //var host = "http://192.168.137.1:57493";
-var host = "http://192.168.1.9:12345";
+var host = "http://192.168.1.101:12345";
 //cache: true, $.ajaxSetup({'cache':true});
 //
 
