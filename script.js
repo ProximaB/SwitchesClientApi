@@ -302,17 +302,18 @@ function EditSwitchViewModel() {
       cache: false,
       dataType: "json",
       cache: true,
-      data: JSON.stringify(data),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", 
-            "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
-    },
+      data: JSON.stringify(data),     
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
     };
     return $.ajax(request);
   };
+
+ /* beforeSend: function (xhr) {
+    xhr.setRequestHeader("Authorization", 
+        "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
+},*/
 
   self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
@@ -325,7 +326,7 @@ function EditSwitchViewModel() {
     }
   });
 
-  self.setSwitch = function(swth) {
+  self.editSwitch = function() {
     $("edit").modal("show");
 
     self.switchPointer = swth;
@@ -334,7 +335,8 @@ function EditSwitchViewModel() {
     self.roomId(swth.roomId());
     self.state(swth.state());
   };
-  self.editSwitch = function() {
+
+    self.setSwitch = function(swth) {
     $("#edit").modal("hide");
 
     switchesViewModel.edit(self.switchPointer, {

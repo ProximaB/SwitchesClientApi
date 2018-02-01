@@ -41,7 +41,7 @@
             <!-- ko foreach: switches -->
             <tr>
                 <td>
-                    <span data-bind="visible: isON" class="label label-success">ON</span>
+                    <span data-bind="visible: isON" class="label label-success">ON&nbsp</span>
                     <span data-bind="visible: !isON()" class="label label-important">OFF</span>
                 </td>
                 <td>
@@ -68,7 +68,7 @@
             <!-- /ko -->
         </table>
         <div class="control-group">
-            <button data-bind="click: beginAdd" class="optionBtn">Add Switch</button>
+            <button data-bind="click: beginAdd" class="btn optionBtn">Add Switch</button>
         </div>
     </div>
 

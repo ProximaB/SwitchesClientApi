@@ -1,35 +1,31 @@
 
-  @media (max-width:420px) {
-    .loginBtn {
-      width:220px;
-      float: left;
-      margin: 1px 0 1px 4px;
-    }
-
-    #login {
-        width: auto;
-    }
-  }
-  
   @media (max-width: 630px) {
-    .optionBtn {
+    .optionBtn{
+        padding: 4px 6px;
+        width: 100%;
+        margin: 10px;
+    }
+}
+
+  @media (max-width: 408px) {
+    .loginBtn{
         padding: 4px 6px;
         width: 100%;
     }
+    .form-control{
+        width: 100%;
+        
+    }
+    .login {
+        overflow: hidden;
+        padding-right: 25px;
+    }
 }
 
-@media (min-width: 768px) {
-    .btn {
-        padding: 6px 8px;
-    }
+
+
+.label-success {
+    padding-left:  6.64px;
+
 }
-@media (min-width: 992px) {
-    .btn {
-        padding: 8px 12px;
-    }
-}
-@media (min-width: 1200px) {
-    .btn {       
-        font-size: 14px;
-    }
-}
+
