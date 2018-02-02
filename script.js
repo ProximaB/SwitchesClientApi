@@ -3,25 +3,25 @@ var host = "http://192.168.0.101:12345";
 //cache: true, $.ajaxSetup({'cache':true});
 //
 
-$(document).ready(function(){
+$(document).ready(function() {
   //ws = new WebSocket("ws://192.168.137.1:57493/notifications");
   ws = new WebSocket("ws://192.168.0.101:12345/notifications");
-  console.log("Web Socket connected!")
-  ws.onmessage = function(evt) { 
+  console.log("Web Socket connected!");
+  ws.onmessage = function(evt) {
     self = this;
     //var data = JSON.parse(evt.data);
     var dataa = evt.data.toString();
-    var array = dataa.split(':'); 
+    var array = dataa.split(":");
     self.id = array[0];
     self.state = array[1];
     console.log("WS: id: " + self.id + "state: " + self.state);
-    for(var i=0; i < switchesViewModel.switches().length; i++){
-      if(switchesViewModel.switches()[i].id() == self.id){
-        console.log("Socket " + self.id + " State: " + self.state )
-        switchesViewModel.switches()[i].state(self.state);  
+    for (var i = 0; i < switchesViewModel.switches().length; i++) {
+      if (switchesViewModel.switches()[i].id() == self.id) {
+        console.log("Socket " + self.id + " State: " + self.state);
+        switchesViewModel.switches()[i].state(self.state);
       }
-    }   
-  }
+    }
+  };
 });
 
 function Switch(data) {
@@ -78,10 +78,12 @@ function SwitchesViewModel() {
       dataType: "json",
       cache: true,
       data: JSON.stringify(data),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", 
-            "Basic " + btoa(self.username + ":" + self.password));
-    },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " + btoa(self.username + ":" + self.password)
+        );
+      },
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
@@ -99,9 +101,11 @@ function SwitchesViewModel() {
   };
 
   self.edit = function(swth, data) {
-    self.ajax(self.switchesURI + swth.id(), "PUT", data).done(function(newSwith) {
-      self.updateSwitch(swth, newSwith);
-    });
+    self
+      .ajax(self.switchesURI + swth.id(), "PUT", data)
+      .done(function(newSwith) {
+        self.updateSwitch(swth, newSwith);
+      });
   };
 
   self.updateSwitch = function(swth, newSwith) {
@@ -114,9 +118,9 @@ function SwitchesViewModel() {
     for (var j = 0; j < self.rooms().length; j++) {
       if (self.switches()[pointer].roomId() == self.rooms()[j].id()) {
         self.switches()[pointer].roomName(self.rooms()[j].name());
-      };
+      }
     }
-  
+
     console.log("indexOfSwitch: " + i);
     console.log("newSwitch.name: " + newSwith.name);
     console.log("newSwitch.state: " + newSwith.state);
@@ -165,53 +169,52 @@ function SwitchesViewModel() {
       });
   };
 
-
-  self.init = function(){
-
-  self.ajax(self.switchesURI, "GET")
-  .done(function(data) {
-    for (var i = 0; i < data.length; i++) {
-      console.log("[GET relay] GetSwitch[" + i + "] = " + data[i]);
-      self.switches.push(new Switch(data[i]));
-    }
-  })
-  .done(function() {
-    self.joinWithRoom();
-  });
-
-  self.joinWithRoom = function() {
-    console.log("Joining Started");
+  self.init = function() {
     self
-      .ajax(self.roomsURI, "GET")
+      .ajax(self.switchesURI, "GET")
       .done(function(data) {
-        console.log("[GET Rooms] data len: " + data.length);
         for (var i = 0; i < data.length; i++) {
-          self.rooms.push({
-            id: ko.observable(data[i].id),
-            name: ko.observable(data[i].name),
-            description: ko.observable(data[i].description)
-          });
+          console.log("[GET relay] GetSwitch[" + i + "] = " + data[i]);
+          self.switches.push(new Switch(data[i]));
         }
       })
       .done(function() {
-        console.log("switches length: " + self.switches().length);
-        console.log("rooms length: " + self.rooms().length);
-        for (var k = 0; k < self.switches().length; k++) {
-          for (var j = 0; j < self.rooms().length; j++) {
-            if (self.switches()[k].roomId() == self.rooms()[j].id()) {
-              self.switches()[k].roomName(self.rooms()[j].name());
-              console.log("self.rooms()[j].name = " + self.rooms()[j].name());
-              console.log(
-                "self.switches()[k].name = " + self.switches()[k].roomName()
-              );
-            }
-            console.log("PUSHED");
-          }
-        }
-        console.log("Switches[all] = " + self.switches());
+        self.joinWithRoom();
       });
+
+    self.joinWithRoom = function() {
+      console.log("Joining Started");
+      self
+        .ajax(self.roomsURI, "GET")
+        .done(function(data) {
+          console.log("[GET Rooms] data len: " + data.length);
+          for (var i = 0; i < data.length; i++) {
+            self.rooms.push({
+              id: ko.observable(data[i].id),
+              name: ko.observable(data[i].name),
+              description: ko.observable(data[i].description)
+            });
+          }
+        })
+        .done(function() {
+          console.log("switches length: " + self.switches().length);
+          console.log("rooms length: " + self.rooms().length);
+          for (var k = 0; k < self.switches().length; k++) {
+            for (var j = 0; j < self.rooms().length; j++) {
+              if (self.switches()[k].roomId() == self.rooms()[j].id()) {
+                self.switches()[k].roomName(self.rooms()[j].name());
+                console.log("self.rooms()[j].name = " + self.rooms()[j].name());
+                console.log(
+                  "self.switches()[k].name = " + self.switches()[k].roomName()
+                );
+              }
+              console.log("PUSHED");
+            }
+          }
+          console.log("Switches[all] = " + self.switches());
+        });
+    };
   };
-}
 
   self.beginLogin = function() {
     $("#login").modal("show");
@@ -243,10 +246,13 @@ function RoomsViewModel() {
       dataType: "json",
       cache: true,
       data: JSON.stringify(data),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", 
-            "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
-    },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " +
+            btoa(switchesViewModel.username + ":" + switchesViewModel.password)
+        );
+      },
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
@@ -264,9 +270,11 @@ function RoomsViewModel() {
   };
 
   self.edit = function(swth, data) {
-    self.ajax(self.switchesURI + swth.id(), "PUT", data).done(function(newSwith) {
-      self.updateSwitch(swth, newSwith);
-    });
+    self
+      .ajax(self.switchesURI + swth.id(), "PUT", data)
+      .done(function(newSwith) {
+        self.updateSwitch(swth, newSwith);
+      });
   };
 
   self.updateSwitch = function(swth, newSwith) {
@@ -279,9 +287,9 @@ function RoomsViewModel() {
     for (var j = 0; j < self.rooms().length; j++) {
       if (self.switches()[pointer].roomId() == self.rooms()[j].id()) {
         self.switches()[pointer].roomName(self.rooms()[j].name());
-      };
+      }
     }
-  
+
     console.log("indexOfSwitch: " + i);
     console.log("newSwitch.name: " + newSwith.name);
     console.log("newSwitch.state: " + newSwith.state);
@@ -330,17 +338,17 @@ function RoomsViewModel() {
       });
   };
 
-
-  self.ajax(self.switchesURI, "GET")
-  .done(function(data) {
-    for (var i = 0; i < data.length; i++) {
-      console.log("[GET relay] GetSwitch[" + i + "] = " + data[i]);
-      self.switches.push(new Switch(data[i]));
-    }
-  })
-  .done(function() {
-    self.joinWithRoom();
-  });
+  self
+    .ajax(self.switchesURI, "GET")
+    .done(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        console.log("[GET relay] GetSwitch[" + i + "] = " + data[i]);
+        self.switches.push(new Switch(data[i]));
+      }
+    })
+    .done(function() {
+      self.joinWithRoom();
+    });
 
   self.joinWithRoom = function() {
     console.log("Joining Started");
@@ -407,10 +415,13 @@ function AddSwitchViewModel() {
       dataType: "json",
       cache: true,
       data: JSON.stringify(data),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", 
-            "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
-    },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " +
+            btoa(switchesViewModel.username + ":" + switchesViewModel.password)
+        );
+      },
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
@@ -464,11 +475,14 @@ function EditSwitchViewModel() {
       cache: false,
       dataType: "json",
       cache: true,
-      data: JSON.stringify(data),    
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", 
-            "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
-    }, 
+      data: JSON.stringify(data),
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " +
+            btoa(switchesViewModel.username + ":" + switchesViewModel.password)
+        );
+      },
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
@@ -499,20 +513,18 @@ function EditSwitchViewModel() {
     $("#edit").modal("show");
 
     console.log("switchPointer: " + swth.id());
-    console.log("self.name() : "+ self.name() );
- 
+    console.log("self.name() : " + self.name());
   };
 
-    
   self.editSwitch = function() {
     switchesViewModel.edit(self.swth, {
       name: self.name(),
       description: self.description(),
       state: self.state(),
       roomId: self.roomId()
-    });  
+    });
 
-    $("#edit").modal("hide"); 
+    $("#edit").modal("hide");
   };
 }
 
@@ -521,10 +533,45 @@ function LoginViewModel() {
 
   self.username = ko.observable();
   self.password = ko.observable();
+  self.error = ko.observable(false);
+  self.success = ko.observable(false);
 
   self.login = function() {
-    $("#login").modal("hide");
     switchesViewModel.login(self.username(), self.password());
+    self.error(false);
+    var request = {
+      url: host + "/api/Rooms",
+      type: "GET",
+      contentType: "application/json",
+      accepts: "application/json",
+      cache: false,
+      dataType: "json",
+      cache: true,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " +
+            btoa(switchesViewModel.username + ":" + switchesViewModel.password)
+        );
+      },
+      success: function() {        
+        self.success(true);
+        switchesViewModel.init();
+        setTimeout( function() {   
+          $("#login").modal("hide"); 
+        }, 1000);
+        addSwitchViewModel.init();
+        editSwitchViewModel.init();
+      },
+      error: function(jqXHR) {
+        console.log("ajax error " + jqXHR.status);
+        self.error(true);
+        $("alert").modal("show");
+      }
+    };
+    return $.ajax(request);
+
+    $("#login").modal("hide");
     switchesViewModel.init();
     addSwitchViewModel.init();
     editSwitchViewModel.init();
@@ -540,5 +587,3 @@ ko.applyBindings(switchesViewModel, $("#main")[0]);
 ko.applyBindings(addSwitchViewModel, $("#add")[0]);
 ko.applyBindings(editSwitchViewModel, $("#edit")[0]);
 ko.applyBindings(loginViewModel, $("#login")[0]);
-
-
