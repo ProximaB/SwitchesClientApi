@@ -1,3 +1,8 @@
+//var host = "http://192.168.137.1:57493";
+var host = "http://192.168.0.101:12345";
+//cache: true, $.ajaxSetup({'cache':true});
+//
+
 $(document).ready(function(){
   //ws = new WebSocket("ws://192.168.137.1:57493/notifications");
   ws = new WebSocket("ws://192.168.0.101:12345/notifications");
@@ -18,11 +23,6 @@ $(document).ready(function(){
     }   
   }
 })
-
-//var host = "http://192.168.137.1:57493";
-var host = "http://192.168.0.101:12345";
-//cache: true, $.ajaxSetup({'cache':true});
-//
 
 function Switch(data) {
   var self = this;
@@ -93,21 +93,33 @@ function SwitchesViewModel() {
     //alert("Add");
     $("#add").modal();
   };
+
   self.beginEdit = function(swth) {
     editSwitchViewModel.setSwitch(swth);
-    $("#edit").modal("show");
   };
+
   self.edit = function(swth, data) {
-    self.ajax(switchesURI + swth.id(), "PUT", data).done(function(data) {
-      self.updateSwitch(swth, data);
+    self.ajax(self.switchesURI + swth.id(), "PUT", data).done(function(newSwith) {
+      self.updateSwitch(swth, newSwith);
     });
   };
+
   self.updateSwitch = function(swth, newSwith) {
-    var i = self.switches.indexOf(swth);
+    var pointer = self.switches.indexOf(swth);
     //self.switches()[i].uri(newSwith.uri);
-    self.switches()[i].name(newSwith.title);
-    self.switches()[i].description(newSwith.description);
-    self.switches()[i].done(newSwith.done);
+    //self.switches()[i].name(newSwith.title);
+    //self.switches()[i].description(newSwith.description);
+    self.switches.replace(swth, new Switch(newSwith));
+
+    for (var j = 0; j < self.rooms().length; j++) {
+      if (self.switches()[pointer].roomId() == self.rooms()[j].id()) {
+        self.switches()[pointer].roomName(self.rooms()[j].name());
+      };
+    }
+  
+    console.log("indexOfSwitch: " + i);
+    console.log("newSwitch.name: " + newSwith.name);
+    console.log("newSwitch.state: " + newSwith.state);
   };
 
   self.remove = function(swth) {
@@ -205,21 +217,6 @@ function SwitchesViewModel() {
   self.login = function(username, password) {
     self.username = username;
     self.password = password;
-
-    // self
-    //   .ajax(self.switchesURI, "GET")
-    //   .done(function(data) {
-    //     for (var i = 0; i < data.length; i++) {
-    //       self.rooms.push({
-    //         id: ko.observable(data[i].id),
-    //         name: ko.observable(data[i].name),
-    //         description: ko.observable(data[i].description)
-    //       });
-    //     }
-    //   })
-    //   .fail(function(jqXHR) {
-    //     if (jqXHR.status == 403) setTimeout(self.beginLogin, 500);
-    //   });
   };
 
   self.beginLogin();
@@ -302,19 +299,18 @@ function EditSwitchViewModel() {
       cache: false,
       dataType: "json",
       cache: true,
-      data: JSON.stringify(data),     
+      data: JSON.stringify(data),    
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", 
+            "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
+    }, 
       error: function(jqXHR) {
         console.log("ajax error " + jqXHR.status);
       }
     };
     return $.ajax(request);
   };
-
- /* beforeSend: function (xhr) {
-    xhr.setRequestHeader("Authorization", 
-        "Basic " + btoa(switchesViewModel.username + ":" + switchesViewModel.password));
-},*/
-
+  
   self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
@@ -326,25 +322,32 @@ function EditSwitchViewModel() {
     }
   });
 
-  self.editSwitch = function() {
-    $("edit").modal("show");
+  self.setSwitch = function(swth) {
+    console.log("EditVievModal Setted");
 
-    self.switchPointer = swth;
+    self.swth = swth;
     self.name(swth.name());
     self.description(swth.description());
     self.roomId(swth.roomId());
     self.state(swth.state());
+
+    $("#edit").modal("show");
+
+    console.log("switchPointer: " + swth.id());
+    console.log("self.name() : "+ self.name() );
+ 
   };
 
-    self.setSwitch = function(swth) {
-    $("#edit").modal("hide");
+    
+  self.editSwitch = function() {
+    switchesViewModel.edit(self.swth, {
+      name: self.name(),
+      description: self.description(),
+      state: self.state(),
+      roomId: self.roomId()
+    });  
 
-    switchesViewModel.edit(self.switchPointer, {
-      name: ko.observable(data[i].name),
-      description: ko.observable(data[i].description),
-      state: ko.observable(data[i].state),
-      roomId: ko.observable(data[i].roomId)
-    });
+    $("#edit").modal("hide"); 
   };
 }
 
