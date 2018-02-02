@@ -166,6 +166,8 @@ function SwitchesViewModel() {
   };
 
 
+  self.init = function(){
+
   self.ajax(self.switchesURI, "GET")
   .done(function(data) {
     for (var i = 0; i < data.length; i++) {
@@ -209,6 +211,7 @@ function SwitchesViewModel() {
         console.log("Switches[all] = " + self.switches());
       });
   };
+}
 
   self.beginLogin = function() {
     $("#login").modal("show");
@@ -415,7 +418,7 @@ function AddSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.ajax(self.roomsURI, "GET").done(function(data) {
+  self.init = self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data.length);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
@@ -473,7 +476,7 @@ function EditSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.ajax(self.roomsURI, "GET").done(function(data) {
+  self.init = self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
@@ -522,13 +525,16 @@ function LoginViewModel() {
   self.login = function() {
     $("#login").modal("hide");
     switchesViewModel.login(self.username(), self.password());
+    switchesViewModel.init();
+    addSwitchViewModel.init();
+    editSwitchViewModel.init();
   };
 }
-var loginViewModel = new LoginViewModel();
+
 var switchesViewModel = new SwitchesViewModel();
 var addSwitchViewModel = new AddSwitchViewModel();
 var editSwitchViewModel = new EditSwitchViewModel();
-
+var loginViewModel = new LoginViewModel();
 
 ko.applyBindings(switchesViewModel, $("#main")[0]);
 ko.applyBindings(addSwitchViewModel, $("#add")[0]);
