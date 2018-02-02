@@ -151,7 +151,7 @@ function SwitchesViewModel() {
       .ajax(self.switchesURI, "POST", swth)
       .done(function(data) {
         console.log("data add" + data);
-        self.switches = ko.push(Switch(data));
+        self.switches.push(new Switch(data));
       })
       .done(function() {
         for (var j = 0; j < self.rooms().length; j++) {
@@ -228,7 +228,7 @@ function AddSwitchViewModel() {
   self.name = ko.observable();
   self.description = ko.observable();
   self.roomId = ko.observable();
-  self.state = ko.observable();
+  self.state = ko.observable("OFF");
 
   self.roomsURI = host + "/api/Rooms/";
 
@@ -310,7 +310,7 @@ function EditSwitchViewModel() {
     };
     return $.ajax(request);
   };
-  
+
   self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
