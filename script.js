@@ -1,5 +1,6 @@
 //var host = "http://192.168.137.1:57493";
-var host = "http://192.168.0.101:12345";
+//var host = "http://192.168.0.101:12345";
+  var host = "http://localhost:12658";
 //cache: true, $.ajaxSetup({'cache':true});
 //
 
