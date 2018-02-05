@@ -1,13 +1,14 @@
 //var host = "http://192.168.137.1:57493";
 //var host = "http://192.168.0.101:12345";
-  var host = "http://localhost:12658";
+  var host = "http://localhost:12345";
 //cache: true, $.ajaxSetup({'cache':true});
 //
 
 $(document).ready(function() {
   //ws = new WebSocket("ws://192.168.137.1:57493/notifications");
-  ws = new WebSocket("ws://192.168.0.101:12345/notifications");
-  console.log("Web Socket connected!");
+  //ws = new WebSocket("ws://192.168.0.101:12345/notifications");
+  ws = new WebSocket("ws://localhost:12345/notifications");
+  console.log("Web Socket notifications connected!");
   ws.onmessage = function(evt) {
     self = this;
     //var data = JSON.parse(evt.data);
@@ -19,6 +20,23 @@ $(document).ready(function() {
     for (var i = 0; i < switchesViewModel.switches().length; i++) {
       if (switchesViewModel.switches()[i].id() == self.id) {
         console.log("Socket " + self.id + " State: " + self.state);
+        switchesViewModel.switches()[i].state(self.state);
+      }
+    }
+  };
+
+  ws = new WebSocket("ws://localhost:12345/SwitchChanged");
+  console.log("Web Socket SwitchChanged connected!");
+  ws.onmessage = function(evt) {
+    self = this;
+    //var data = JSON.parse(evt.data);
+    var dataa = evt.data.toString();
+    var array = dataa.split(":");
+    self.id = array[0];
+    self.state = array[1];
+    console.log("WS: id: " + self.id + "action: " + self.state);
+    for (var i = 0; i < switchesViewModel.switches().length; i++) {
+      if (switchesViewModel.switches()[i].id() == self.id) {
         switchesViewModel.switches()[i].state(self.state);
       }
     }
@@ -430,7 +448,8 @@ function AddSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.init = self.ajax(self.roomsURI, "GET").done(function(data) {
+  self.init = function() {
+    self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data.length);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
@@ -440,6 +459,7 @@ function AddSwitchViewModel() {
       });
     }
   });
+}
 
   self.addSwitch = function() {
     $("#add").modal("hide");
@@ -491,7 +511,8 @@ function EditSwitchViewModel() {
     return $.ajax(request);
   };
 
-  self.init = self.ajax(self.roomsURI, "GET").done(function(data) {
+  self.init = function() {
+    self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
       self.rooms.push({
@@ -501,6 +522,7 @@ function EditSwitchViewModel() {
       });
     }
   });
+}
 
   self.setSwitch = function(swth) {
     console.log("EditVievModal Setted");
