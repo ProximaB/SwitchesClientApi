@@ -1,13 +1,13 @@
-//var host = "http://192.168.137.1:57493";
+var host = "http://192.168.137.1:80";
 //var host = "http://192.168.0.101:12345";
-  var host = "http://localhost:12345";
+//  var host = "http://localhost:12345";
 //cache: true, $.ajaxSetup({'cache':true});
 //
 
 $(document).ready(function() {
-  //ws = new WebSocket("ws://192.168.137.1:57493/notifications");
+  ws = new WebSocket("ws://192.168.137.1:80/notifications");
   //ws = new WebSocket("ws://192.168.0.101:12345/notifications");
-  ws = new WebSocket("ws://localhost:12345/notifications");
+  //ws = new WebSocket("ws://localhost:12345/notifications");
   console.log("Web Socket notifications connected!");
   ws.onmessage = function(evt) {
     self = this;
@@ -25,7 +25,7 @@ $(document).ready(function() {
     }
   };
 
-  ws = new WebSocket("ws://localhost:12345/SwitchChanged");
+  ws = new WebSocket("ws://192.168.137.1:80/SwitchChanged");
   console.log("Web Socket SwitchChanged connected!");
   ws.onmessage = function(evt) {
     self = this;
@@ -82,8 +82,6 @@ id: ko.observable(data[i].id),
 function SwitchesViewModel() {
   var self = this;
 
-  self.roomsURI = host + "/api/Rooms/";
-  self.switchesURI = host + "/api/Switches/";
   self.switches = ko.observableArray();
   self.rooms = ko.observableArray();
 
@@ -91,6 +89,7 @@ function SwitchesViewModel() {
     var request = {
       url: uri,
       type: method,
+      crossDomain: true,
       contentType: "application/json",
       accepts: "application/json",
       cache: false,
@@ -189,6 +188,10 @@ function SwitchesViewModel() {
   };
 
   self.init = function() {
+
+    self.roomsURI = host + "/api/Users/" + self.username + "/Rooms/";
+    self.switchesURI = host + "/api/Users/" + self.username + "/Switches/";
+
     self
       .ajax(self.switchesURI, "GET")
       .done(function(data) {
@@ -250,8 +253,8 @@ function SwitchesViewModel() {
 function RoomsViewModel() {
   var self = this;
 
-  self.roomsURI = host + "/api/Rooms/";
-  self.switchesURI = host + "/api/Rooms/${RoomId}/Switches";
+  self.roomsURI = host + "/api/Users/" + switchesViewModel.username + "/Rooms/";
+  self.switchesURI = host + "/api/Users/" + switchesViewModel.username + "/Rooms/" + RoomId + "/Switches";
 
   self.roomsRepo = ko.observableArray();
 
@@ -259,6 +262,7 @@ function RoomsViewModel() {
     var request = {
       url: uri,
       type: method,
+      crossDomain: true,
       contentType: "application/json",
       accepts: "application/json",
       cache: false,
@@ -422,12 +426,13 @@ function AddSwitchViewModel() {
   self.roomId = ko.observable();
   self.state = ko.observable("OFF");
 
-  self.roomsURI = host + "/api/Rooms/";
+  
 
   self.ajax = function(uri, method, data) {
     var request = {
       url: uri,
       type: method,
+      crossDomain: true,
       contentType: "application/json",
       accepts: "application/json",
       cache: false,
@@ -449,6 +454,8 @@ function AddSwitchViewModel() {
   };
 
   self.init = function() {
+    self.roomsURI = host + "/api/Users/" + switchesViewModel.username + "/Rooms/";
+
     self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data.length);
     for (var i = 0; i < data.length; i++) {
@@ -485,12 +492,11 @@ function EditSwitchViewModel() {
   self.roomId = ko.observable();
   self.state = ko.observable();
 
-  self.roomsURI = host + "/api/Rooms/";
-
   self.ajax = function(uri, method, data) {
     var request = {
       url: uri,
       type: method,
+      crossDomain: true,
       contentType: "application/json",
       accepts: "application/json",
       cache: false,
@@ -512,6 +518,8 @@ function EditSwitchViewModel() {
   };
 
   self.init = function() {
+    self.roomsURI = host + "/api/Users/" + switchesViewModel.username + "/Rooms/";
+    
     self.ajax(self.roomsURI, "GET").done(function(data) {
     console.log("AddSwitch_Get_Length" + data);
     for (var i = 0; i < data.length; i++) {
@@ -565,6 +573,7 @@ function LoginViewModel() {
     var request = {
       url: host + "/api/Rooms",
       type: "GET",
+      crossDomain: true,
       contentType: "application/json",
       accepts: "application/json",
       cache: false,
